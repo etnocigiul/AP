@@ -10,15 +10,23 @@ object Dict{
 	def main(args: Array[String]) {
 		
 		val inputFile = "/home/bijo/Prove/Dict/sentences.txt"
+
+		//Inizializzo lo SparkContext
 		val conf = new SparkConf().setAppName("Dict")
 		val sc = new SparkContext(conf)
 
+		/*
+		Carico i dati che mi servono per la creazione del dizionario
+		Il dizionario sarà una Map composta da elemeti del tipo <Parola, n° occorrenze>
+		*/
 		val input = sc.textFile(inputFile)
 		val dict = input.flatMap(line => line.split("[^\\w]+")).filter(v => v.length > 1).map(x => (x, 1)).reduceByKey((x, y) => x + y).sortByKey()
 
+		//Ricavo una lista di Double dai valori distinti del dizionario
 		val numbers = dict.map(v => v._2.toDouble).filter(x => x > 1).distinct()
 
-		val rm = recursiveMap(numbers)D
+		val rm = recursiveMap(numbers)
+
 
 		println("|||||||||||||||||||||||||||||||||||||||||||||||\n|||||||||||||||||||||||||||||||||||||||||||||||")
 		dict.foreach(v => println(v._1 + ": \t\t" + v._2))
@@ -35,6 +43,12 @@ object Dict{
 
 		}
 
+	/* 
+	Funzione map ricorsiva
+	param num : RDD di Double a cui va applicato il quadrato per ogni elemento
+
+	Se il valore massimo dell'RDD supera il limite stabilito non viene eseguita nessuna map, altrimenti si esegue la funzione sull'RDD a cui viene applicata la map
+	*/
 	def recursiveMap(num : RDD[Double]) : RDD[Double] = if(num.max < MAXINT) recursiveMap(num.map(x => x*x)) else num
 
 }
