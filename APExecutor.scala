@@ -22,13 +22,13 @@ object APExecutor extends Serializable{
 		val startTime = System.nanoTime()
 		val nIt = 100
 
-		val ip = "192.168.100.1"
+		val ip = "192.168.x.x"
 		val port = "9010"
-		val dirInput = "output/SM.prova.gzipped/"
-		val dirEdges = "aut_10/"
-		val dirSim = "sim_100/"
+		val dirInput = "path/to/test/dir/"
+		val dirEdges = "aut_N/"
+		val dirSim = "sim_M/"
 
-		val inputPath = "hdfs://" + ip + ":" + port + "/user/conte/"
+		val inputPath = "hdfs://" + ip + ":" + port + "/user/name/"
 		//Inizializzo lo SparkContext
 		try{		
 			val conf = new SparkConf().setAppName("APExecutor")
